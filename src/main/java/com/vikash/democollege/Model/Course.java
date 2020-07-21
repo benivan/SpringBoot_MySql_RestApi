@@ -25,9 +25,6 @@ public class Course {
 
 
 
-//    @ManyToMany(mappedBy = "courseSet")
-//    private Set<Student> studentSet = new HashSet<>();
-
 
 
     @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
