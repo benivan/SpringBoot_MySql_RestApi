@@ -1,5 +1,6 @@
 package com.vikash.democollege.Services;
 
+import com.vikash.democollege.Dto.ResultDto;
 import com.vikash.democollege.Model.*;
 import com.vikash.democollege.Repository.*;
 import com.vikash.democollege.Response.StudentResponse;
@@ -103,5 +104,31 @@ public class StudentService {
             return ResponseEntity.ok(new StudentResponse(optionalStudent.get()));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student Not Found");
+    }
+
+    public ResponseEntity<?> addResultToStudent(Integer studentId, ResultDto resultDto) {
+        Optional<Student> optionalStudent = studentRepo.findById(studentId);
+        if (optionalStudent.isPresent()) {
+            Student student = optionalStudent.get();
+            Optional<Course> optionalCourse = courseRepo.findById(resultDto.getCourseId());
+            if (optionalCourse.isPresent()) {
+                Course course = optionalCourse.get();
+
+                StudentResult studentResult = StudentResult.builder()
+                        .studentResultId(new StudentResultId(course.getCourseId(),student.getStudentId()))
+                        .student(student)
+                        .cgpa(resultDto.getCgpa())
+                        .isCourseFinished(true)
+                        .course(course)
+                        .grade(resultDto.getGrade())
+                        .marks(resultDto.getMarks())
+                        .build();
+
+                studentResultRepo.save(studentResult);
+                return ResponseEntity.status(HttpStatus.CREATED).build();
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

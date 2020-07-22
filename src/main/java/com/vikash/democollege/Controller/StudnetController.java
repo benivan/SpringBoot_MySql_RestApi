@@ -1,5 +1,6 @@
 package com.vikash.democollege.Controller;
 
+import com.vikash.democollege.Dto.ResultDto;
 import com.vikash.democollege.Dto.StudentDto;
 import com.vikash.democollege.Model.Student;
 import com.vikash.democollege.Services.StudentService;
@@ -23,6 +24,12 @@ public class StudnetController {
     public ResponseEntity<?> addCourseToStudents(@PathVariable Integer studentId, @RequestParam Integer courseId){
         return studentService.addCourseToStudent(studentId,courseId);
     }
+
+    @PutMapping("/{studentId}/addResult")
+    public ResponseEntity<?> addResultToStudent(@PathVariable Integer studentId, @RequestBody ResultDto resultDto){
+        return studentService.addResultToStudent(studentId, resultDto);
+    }
+
 
     @PutMapping("/{studentId}/addDepartment")
     public ResponseEntity<?> addDepartmentToStudents(@PathVariable Integer studentId,@RequestParam Integer departmentId){
