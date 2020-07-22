@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class StudentResponse {
 
-    private StudentResult studentResult;
+
 
     private Integer studentId;
 
@@ -29,11 +29,11 @@ public class StudentResponse {
 
     private String studentAddress;
 
-    private Set<CourseResponseForStudent> courseSet ;
-
     private DepartmentResponse department;
 
     private SectionResponse section;
+
+    private Set<StudentResultResponse> studentResult;
 
     public StudentResponse(Student student){
         this.studentId = student.getStudentId();
@@ -44,8 +44,7 @@ public class StudentResponse {
         this.studentAddress =student.getStudentAddress();
         this.section = new SectionResponse(student.getSection());
         this.department = new DepartmentResponse(student.getDepartment());
-//        this.courseSet = student.getCourseSet().stream().map( e-> new CourseResponseForStudent(e)).collect(Collectors.toSet());
-
+        this.studentResult = student.getStudentResultSet().stream().filter(e -> e.getIsCourseFinished()).map(e-> new StudentResultResponse(e)).collect(Collectors.toSet());
     }
 
 }

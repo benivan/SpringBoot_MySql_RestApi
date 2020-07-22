@@ -98,6 +98,9 @@ public class StudentService {
         } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+
+
+
     public ResponseEntity<?> getStudentDetails(Integer studentId) {
         Optional<Student> optionalStudent = studentRepo.findById(studentId);
         if (optionalStudent.isPresent()) {
@@ -105,6 +108,9 @@ public class StudentService {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student Not Found");
     }
+
+
+
 
     public ResponseEntity<?> addResultToStudent(Integer studentId, ResultDto resultDto) {
         Optional<Student> optionalStudent = studentRepo.findById(studentId);
