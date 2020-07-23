@@ -4,8 +4,11 @@ import com.vikash.democollege.Dto.ResultDto;
 import com.vikash.democollege.Model.*;
 import com.vikash.democollege.Repository.*;
 import com.vikash.democollege.Response.StudentResponse;
+import com.vikash.democollege.Response.StudentResultResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -101,10 +104,12 @@ public class StudentService {
 
 
 
-    public ResponseEntity<?> getStudentDetails(Integer studentId) {
+    public ResponseEntity<?> getStudentDetails(Integer studentId,Integer page, Integer size) {
+        PageRequest pageRequest = PageRequest.of(page,size);
         Optional<Student> optionalStudent = studentRepo.findById(studentId);
         if (optionalStudent.isPresent()) {
-            return ResponseEntity.ok(new StudentResponse(optionalStudent.get()));
+           Student student = optionalStudent.get();
+            return ResponseEntity.ok(new StudentResponse(student));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student Not Found");
     }
@@ -119,19 +124,20 @@ public class StudentService {
             Optional<Course> optionalCourse = courseRepo.findById(resultDto.getCourseId());
             if (optionalCourse.isPresent()) {
                 Course course = optionalCourse.get();
-
-                StudentResult studentResult = StudentResult.builder()
-                        .studentResultId(new StudentResultId(course.getCourseId(),student.getStudentId()))
-                        .student(student)
-                        .cgpa(resultDto.getCgpa())
-                        .isCourseFinished(true)
-                        .course(course)
-                        .grade(resultDto.getGrade())
-                        .marks(resultDto.getMarks())
-                        .build();
-
-                studentResultRepo.save(studentResult);
-                return ResponseEntity.status(HttpStatus.CREATED).build();
+                if (course.getDepartmentSet().contains(student.getDepartment())) {
+                    StudentResult studentResult = StudentResult.builder()
+                            .studentResultId(new StudentResultId(course.getCourseId(),student.getStudentId()))
+                            .student(student)
+                            .cgpa(resultDto.getCgpa())
+                            .isCourseFinished(resultDto.getMarks() >= 50)
+                            .course(course)
+                            .grade(resultDto.getGrade())
+                            .marks(resultDto.getMarks())
+                            .build();
+                    studentResultRepo.save(studentResult);
+                    return ResponseEntity.status(HttpStatus.CREATED).build();
+                }
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student ans Course are not in same Department");
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

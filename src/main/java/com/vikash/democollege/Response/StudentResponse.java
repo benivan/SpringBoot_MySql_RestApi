@@ -1,8 +1,8 @@
 package com.vikash.democollege.Response;
 
 
+
 import com.vikash.democollege.Model.Student;
-import com.vikash.democollege.Model.StudentResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
