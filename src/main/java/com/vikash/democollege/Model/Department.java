@@ -19,11 +19,11 @@ import java.util.Set;
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @Column(name = "department_id")
+
     private Integer departmentId;
-//    @Column(name = "department_name")
+
     private String departmentName;
-//    @Column(name = "department_head")
+
     private String departmentHead;
 
     @OneToMany(mappedBy = "department")

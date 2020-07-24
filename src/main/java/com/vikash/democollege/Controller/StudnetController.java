@@ -44,10 +44,8 @@ public class StudnetController {
     }
 
     @GetMapping("/{studentId}")
-    public ResponseEntity<?> getStudent(@PathVariable Integer studentId,
-                                        @RequestParam(value = "size",defaultValue = "2") Integer size,
-                                        @RequestParam(value = "page",defaultValue = "0") Integer page){
-        return studentService.getStudentDetails(studentId,page,size);
+    public ResponseEntity<?> getStudent(@PathVariable Integer studentId){
+        return studentService.getStudentDetails(studentId);
     }
 
 }

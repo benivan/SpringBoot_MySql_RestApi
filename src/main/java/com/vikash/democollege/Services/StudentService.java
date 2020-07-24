@@ -92,11 +92,16 @@ public class StudentService {
             Optional<Section> optionalSection = sectionRepo.findById(sectionId);
             if (optionalSection.isPresent()) {
                 Section section = optionalSection.get();
-                student.setSection(section);
-                section.getStudentSet().add(student);
-                studentRepo.save(student);
-                sectionRepo.save(section);
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Section Added");
+                Department department = new Department();
+                if (section.getDepartment().equals(student.getDepartment())) {
+                    student.setSection(section);
+                    section.getStudentSet().add(student);
+                    studentRepo.save(student);
+                    sectionRepo.save(section);
+                    return ResponseEntity.status(HttpStatus.ACCEPTED).body("Section Added");
+                }
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Department don't have this section");
+
             } else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -104,8 +109,7 @@ public class StudentService {
 
 
 
-    public ResponseEntity<?> getStudentDetails(Integer studentId,Integer page, Integer size) {
-        PageRequest pageRequest = PageRequest.of(page,size);
+    public ResponseEntity<?> getStudentDetails(Integer studentId) {
         Optional<Student> optionalStudent = studentRepo.findById(studentId);
         if (optionalStudent.isPresent()) {
            Student student = optionalStudent.get();

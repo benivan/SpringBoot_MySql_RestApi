@@ -17,15 +17,8 @@ import java.util.Set;
 public class Course {
     @Id
     @GeneratedValue
-//    @Column(name = "course_id")
     private Integer courseId;
-//    @Column(name = "course_name")
     private String courseName;
-
-
-
-
-
 
     @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(joinColumns = {@JoinColumn()},
