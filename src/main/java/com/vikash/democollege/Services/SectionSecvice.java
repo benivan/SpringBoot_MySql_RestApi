@@ -32,11 +32,15 @@ public class SectionSecvice {
             Optional<Faculty> optionalFaculty = facultyRepo.findById(facultyId);
             if (optionalFaculty.isPresent()) {
                 Faculty faculty = optionalFaculty.get();
-                faculty.getSectionSet().add(section);
-                section.setSectionLead(faculty);
-                facultyRepo.save(faculty);
-                sectionRepo.save(section);
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("SectionLead Added");
+                if (faculty.getDepartment().equals(section.getDepartment())) {
+                    faculty.getSectionSet().add(section);
+                    section.setSectionLead(faculty);
+                    facultyRepo.save(faculty);
+                    sectionRepo.save(section);
+                    return ResponseEntity.status(HttpStatus.ACCEPTED).body("SectionLead Added");
+                }
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Faculty don't belong to this department");
+
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

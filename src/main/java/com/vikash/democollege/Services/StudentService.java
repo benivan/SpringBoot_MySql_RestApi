@@ -92,7 +92,6 @@ public class StudentService {
             Optional<Section> optionalSection = sectionRepo.findById(sectionId);
             if (optionalSection.isPresent()) {
                 Section section = optionalSection.get();
-                Department department = new Department();
                 if (section.getDepartment().equals(student.getDepartment())) {
                     student.setSection(section);
                     section.getStudentSet().add(student);
