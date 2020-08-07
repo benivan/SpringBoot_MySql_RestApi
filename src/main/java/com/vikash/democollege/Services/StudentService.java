@@ -3,17 +3,23 @@ package com.vikash.democollege.Services;
 import com.vikash.democollege.Dto.ResultDto;
 import com.vikash.democollege.Model.*;
 import com.vikash.democollege.Repository.*;
+import com.vikash.democollege.Response.OnlyStudentResponse;
 import com.vikash.democollege.Response.StudentResponse;
 import com.vikash.democollege.Response.StudentResultResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -145,5 +151,11 @@ public class StudentService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    public ResponseEntity<?> getAllStudent() {
+        List<Student> studentRepoAll = studentRepo.findAll();
+        List<OnlyStudentResponse> onlyStudentResponse = studentRepoAll.stream().map(e-> new OnlyStudentResponse(e)).collect(Collectors.toList());
+        return ResponseEntity.ok(onlyStudentResponse);
     }
 }

@@ -48,4 +48,9 @@ public class StudnetController {
         return studentService.getStudentDetails(studentId);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllStudent(){
+        return studentService.getAllStudent();
+    }
+
 }
